@@ -114,7 +114,7 @@
           "mode": "Incremental",
           "templateLink":
           {
-            "uri": "https://azdevstorageaccount.blob.core.usgovcloudapi.net/templates/deployVM.json?sp=r&st=2019-02-13T20:00:57Z&se=2019-02-14T04:00:57Z&spr=https&sv=2018-03-28&sig=GGGaZjQKKeDCElZ0VBsl97N7vCnqFzJ8%2Bwl9lYTgEOQ%3D&sr=b",
+            "uri": "https://raw.githubusercontent.com/wallenc/Deploy-Domain-Joined-WindowsVM/master/deployVM.json",
             "contentVersion": "1.0.0.0"
           },
           "parameters":
