@@ -179,19 +179,9 @@
             "existingVNETResourceGroupName": {
                 "value": "[parameters('existingVNETResourceGroupName')]"
             },
-            "crispComponentURI": {
-                "value": "[parameters('crispComponentURI')]"
-            },            
             "windowsOSVersion": {
                 "value": "[parameters('windowsOSVersion')]"
-            },            
-            "numberOfDataDisks": {
-                "value": "[parameters('numberOfDataDisks')]"
-            },
-            "dataDiskSizes":{
-                "value": "[parameters('dataDiskSizes')]"
-                
-            }      
+            }     
           }
         }
       }
