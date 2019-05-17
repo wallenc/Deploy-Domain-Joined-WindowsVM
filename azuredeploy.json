@@ -48,9 +48,6 @@
         "type": "string",
         "metadata": {}
     },
-    "domainPassword": {
-        "type": "securestring"
-    },
     "domainToJoin": {
         "type": "string",
         "metadata": {}
@@ -62,11 +59,7 @@
           "2012-R2-Datacenter",
           "2016-Datacenter"
         ]
-      },
-    "crispComponentURI": {
-        "type": "string",
-        "metadata": {}
-    },        
+      },      
     "numberOfServersToDeploy": {
         "type": "int",
         "metadata": {}
@@ -96,14 +89,6 @@
           "2016-Datacenter"
         ]
       },    
-    "numberOfDataDisks": {
-        "type": "int",
-        "metadata": {}
-    },
-    "dataDiskSizes":{
-        "type": "array",
-        "metadata": {}
-    },
     "storageSku": {
         "type": "string",
         "metadata": {},

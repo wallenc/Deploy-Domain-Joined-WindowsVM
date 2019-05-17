@@ -23,19 +23,12 @@
     "domainUsername": {
       "type": "string"
     },
-    "domainGroupToAdd": {
-      "type": "string"
-    },    
+    "domainPassword": {
+      "type": "securestring"
+    },
     "numberOfServersToDeploy": {
         "type": "int",
         "metadata": {}
-    },
-    "crispComponentURI": {
-        "type": "string",
-        "metadata": {}
-    },    
-    "domainPassword": {
-      "type": "securestring"
     },
     "ouPath": {
       "type": "string",
@@ -82,14 +75,6 @@
     },
     "existingVNETResourceGroupName": {
       "type": "string",
-      "metadata": {}
-    },    
-    "numberOfDataDisks": {
-      "type": "int",
-      "metadata": {}
-    },
-    "dataDiskSizes":{
-      "type": "array",
       "metadata": {}
     }
   },
@@ -194,20 +179,7 @@
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
-          },
-          "copy": [
-            {
-              "name": "dataDisks",
-              "count": "[parameters('numberOfDataDisks')]",
-              "input": {
-                "caching": "ReadWrite",
-                "diskSizeGB": "[parameters('dataDiskSizes')[copyIndex('dataDisks')]]",
-                "lun": "[copyIndex('dataDisks')]",
-                "name": "[concat(parameters('vmName'), add(parameters('vmStartInstancePrefix'), copyIndex()), '_dataDisk', copyIndex('dataDisks'))]",
-                "createOption": "Empty"
-              }
-            }
-          ]
+          }
         },
         "networkProfile":
         {
