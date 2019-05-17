@@ -1,0 +1,218 @@
+{
+"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+"contentVersion": "1.0.0.0",
+"parameters": {
+    "location": {
+        "type": "string",
+        "allowedValues":
+        [
+            "usgovvirginia",
+            "usgoviowa",
+            "usgovtexas",
+            "usgovarizona"
+        ]
+    },
+    "vmName": {
+        "type": "string"
+    },
+    "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v2"
+    },
+    "vmAdminUsername": {
+        "type": "string"
+    },
+    "vmAdminPassword": {
+        "type": "securestring"
+    },
+    "ouPath": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+        "description": "For Example: OU=ProjectXYZ,OU=Servers,DC=VA,DC=GOV"
+        }
+    },
+    "keyVaultName": {
+        "type": "string",
+        "metadata": {}
+    },
+    "keyVaultSecretName": {
+        "type": "string",
+        "metadata": {}
+    },
+    "keyVaultResourceGroupName": {
+        "type": "string",
+        "metadata": {}
+    },
+    "domainUserName": {
+        "type": "string",
+        "metadata": {}
+    },
+    "domainPassword": {
+        "type": "securestring"
+    },
+    "domainToJoin": {
+        "type": "string",
+        "metadata": {}
+    },            
+    "imageSku": {
+        "type": "string",
+        "metadata": {},
+        "allowedValues": [
+          "2012-R2-Datacenter",
+          "2016-Datacenter"
+        ]
+      },
+    "crispComponentURI": {
+        "type": "string",
+        "metadata": {}
+    },        
+    "numberOfServersToDeploy": {
+        "type": "int",
+        "metadata": {}
+    },
+    "vmStartInstancePrefix": {
+        "type": "int",
+        "defaultValue": "1"
+    },
+    "subnetName": {
+        "type": "string",
+        "metadata": {}
+    },
+    "existingVNETName":{
+        "type": "string",
+        "metadata": {}
+    },
+    "existingVNETResourceGroupName": {
+        "type": "string",
+        "metadata": {}
+    },
+    "windowsOSVersion": {
+        "type": "string",
+        "metadata": {},
+        "allowedValues":
+        [
+          "2012-R2-Datacenter",
+          "2016-Datacenter"
+        ]
+      },    
+    "numberOfDataDisks": {
+        "type": "int",
+        "metadata": {}
+    },
+    "dataDiskSizes":{
+        "type": "array",
+        "metadata": {}
+    },
+    "storageSku": {
+        "type": "string",
+        "metadata": {},
+        "allowedValues": [
+            "Standard_LRS",
+            "Premium_LRS"
+        ]
+    }
+},
+    "variables": {                  
+      "domainJoinOptions": "3",
+      "keyVaultRef": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('keyVaultResourceGroupName'), '/providers/Microsoft.KeyVault/vaults/', parameters('keyVaultName'))]"           
+    },
+    "resources":
+    [
+      {
+        "apiVersion": "2016-02-01",
+        "name": "vmTemplate",
+        "type": "Microsoft.Resources/deployments",
+        "dependsOn": [ ],
+        "properties":
+        {
+          "mode": "Incremental",
+          "templateLink":
+          {
+            "uri": "https://azdevstorageaccount.blob.core.usgovcloudapi.net/templates/deployVM.json?sp=r&st=2019-02-13T20:00:57Z&se=2019-02-14T04:00:57Z&spr=https&sv=2018-03-28&sig=GGGaZjQKKeDCElZ0VBsl97N7vCnqFzJ8%2Bwl9lYTgEOQ%3D&sr=b",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters":
+          {
+            "location":
+            {
+              "value": "[parameters('location')]"
+            },
+            "vmAdminUsername":
+            {
+                "value": "[parameters('vmAdminUsername')]"
+            },
+            "vmAdminPassword":
+            {
+                "value": "[parameters('vmAdminPassword')]"
+            },
+            "domainToJoin":
+            {
+              "value": "[parameters('domainToJoin')]"
+            },
+            "vmName":
+            {
+              "value": "[parameters('vmName')]"
+            },            
+            "vmSize":
+            {
+              "value": "[parameters('vmSize')]"
+            },
+            "domainUsername":
+            {
+                "value": "[parameters('domainUserName')]"
+              },
+            "domainPassword":
+            {
+                "reference": {
+                    "keyVault": {
+                      "id": "[variables('keyVaultRef')]"
+                    },
+                    "secretName": "[parameters('keyVaultSecretName')]"
+                  }
+            },
+            "ouPath":
+            {
+              "value": "[parameters('ouPath')]"
+            },            
+            "storageSku":
+            {
+              "value": "[parameters('storageSku')]"
+            },
+            "numberOfServersToDeploy": {
+                "value": "[parameters('numberOfServersToDeploy')]"
+            },
+            "vmStartInstancePrefix": {
+                "value": "[parameters('vmStartInstancePrefix')]"
+            },
+            "subnetName": {
+                "value": "[parameters('subnetName')]"
+            },
+            "existingVNETName":{
+                "value": "[parameters('existingVNETName')]"
+            },
+            "existingVNETResourceGroupName": {
+                "value": "[parameters('existingVNETResourceGroupName')]"
+            },
+            "crispComponentURI": {
+                "value": "[parameters('crispComponentURI')]"
+            },            
+            "windowsOSVersion": {
+                "value": "[parameters('windowsOSVersion')]"
+            },            
+            "numberOfDataDisks": {
+                "value": "[parameters('numberOfDataDisks')]"
+            },
+            "dataDiskSizes":{
+                "value": "[parameters('dataDiskSizes')]"
+                
+            }      
+          }
+        }
+      }
+    ],
+    "outputs":
+    {
+  
+    }
+  }
