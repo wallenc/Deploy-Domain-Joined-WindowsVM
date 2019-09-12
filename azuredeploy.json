@@ -1,193 +1,171 @@
 {
-"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-"contentVersion": "1.0.0.0",
-"parameters": {
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
     "location": {
-        "type": "string",
-        "allowedValues":
-        [
-            "usgovvirginia",
-            "usgoviowa",
-            "usgovtexas",
-            "usgovarizona"
-        ]
+      "type": "string",
+      "allowedValues": [
+        "usgovvirginia",
+        "usgoviowa",
+        "usgovtexas",
+        "usgovarizona"
+      ]
     },
     "vmName": {
-        "type": "string"
+      "type": "string"
     },
     "vmSize": {
-        "type": "string",
-        "defaultValue": "Standard_D2_v2"
+      "type": "string",
+      "defaultValue": "Standard_D2_v2"
     },
     "vmAdminUsername": {
-        "type": "string"
+      "type": "string"
     },
     "vmAdminPassword": {
-        "type": "securestring"
+      "type": "securestring"
     },
     "ouPath": {
-        "type": "string",
-        "defaultValue": "",
-        "metadata": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
         "description": "For Example: OU=ProjectXYZ,OU=Servers,DC=VA,DC=GOV"
-        }
+      }
     },
     "keyVaultName": {
-        "type": "string",
-        "metadata": {}
+      "type": "string",
+      "metadata": {}
     },
     "keyVaultSecretName": {
-        "type": "string",
-        "metadata": {}
+      "type": "string",
+      "metadata": {}
     },
     "keyVaultResourceGroupName": {
-        "type": "string",
-        "metadata": {}
+      "type": "string",
+      "metadata": {}
     },
     "domainUserName": {
-        "type": "string",
-        "metadata": {}
+      "type": "string",
+      "metadata": {}
     },
     "domainToJoin": {
-        "type": "string",
-        "metadata": {}
-    },            
+      "type": "string",
+      "metadata": {}
+    },
     "imageSku": {
-        "type": "string",
-        "metadata": {},
-        "allowedValues": [
-          "2012-R2-Datacenter",
-          "2016-Datacenter"
-        ]
-      },      
+      "type": "string",
+      "metadata": {},
+      "allowedValues": ["2012-R2-Datacenter", "2016-Datacenter"]
+    },
     "numberOfServersToDeploy": {
-        "type": "int",
-        "metadata": {}
+      "type": "int",
+      "metadata": {}
     },
     "vmStartInstancePrefix": {
-        "type": "int",
-        "defaultValue": "1"
+      "type": "int",
+      "defaultValue": "1"
     },
     "subnetName": {
-        "type": "string",
-        "metadata": {}
+      "type": "string",
+      "metadata": {}
     },
-    "existingVNETName":{
-        "type": "string",
-        "metadata": {}
+    "existingVNETName": {
+      "type": "string",
+      "metadata": {}
     },
     "existingVNETResourceGroupName": {
-        "type": "string",
-        "metadata": {}
+      "type": "string",
+      "metadata": {}
     },
     "windowsOSVersion": {
-        "type": "string",
-        "metadata": {},
-        "allowedValues":
-        [
-          "2012-R2-Datacenter",
-          "2016-Datacenter"
-        ]
-      },    
-    "storageSku": {
-        "type": "string",
-        "metadata": {},
-        "allowedValues": [
-            "Standard_LRS",
-            "Premium_LRS"
-        ]
-    }
-},
-    "variables": {                  
-      "domainJoinOptions": "3",
-      "keyVaultRef": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('keyVaultResourceGroupName'), '/providers/Microsoft.KeyVault/vaults/', parameters('keyVaultName'))]"           
+      "type": "string",
+      "metadata": {},
+      "allowedValues": ["2012-R2-Datacenter", "2016-Datacenter"]
     },
-    "resources":
-    [
-      {
-        "apiVersion": "2016-02-01",
-        "name": "vmTemplate",
-        "type": "Microsoft.Resources/deployments",
-        "dependsOn": [ ],
-        "properties":
-        {
-          "mode": "Incremental",
-          "templateLink":
-          {
-            "uri": "https://raw.githubusercontent.com/wallenc/Deploy-Domain-Joined-WindowsVM/master/deployVM.json",
-            "contentVersion": "1.0.0.0"
+    "storageSku": {
+      "type": "string",
+      "metadata": {},
+      "allowedValues": ["Standard_LRS", "Premium_LRS"]
+    },
+    "availabilitySetName": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "domainJoinOptions": "3",
+    "keyVaultRef": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('keyVaultResourceGroupName'), '/providers/Microsoft.KeyVault/vaults/', parameters('keyVaultName'))]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2016-02-01",
+      "name": "vmTemplate",
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": [],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/wallenc/Deploy-Domain-Joined-WindowsVM/master/deployVM.json",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
           },
-          "parameters":
-          {
-            "location":
-            {
-              "value": "[parameters('location')]"
-            },
-            "vmAdminUsername":
-            {
-                "value": "[parameters('vmAdminUsername')]"
-            },
-            "vmAdminPassword":
-            {
-                "value": "[parameters('vmAdminPassword')]"
-            },
-            "domainToJoin":
-            {
-              "value": "[parameters('domainToJoin')]"
-            },
-            "vmName":
-            {
-              "value": "[parameters('vmName')]"
-            },            
-            "vmSize":
-            {
-              "value": "[parameters('vmSize')]"
-            },
-            "domainUsername":
-            {
-                "value": "[parameters('domainUserName')]"
+          "vmAdminUsername": {
+            "value": "[parameters('vmAdminUsername')]"
+          },
+          "vmAdminPassword": {
+            "value": "[parameters('vmAdminPassword')]"
+          },
+          "domainToJoin": {
+            "value": "[parameters('domainToJoin')]"
+          },
+          "vmName": {
+            "value": "[parameters('vmName')]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSize')]"
+          },
+          "domainUsername": {
+            "value": "[parameters('domainUserName')]"
+          },
+          "domainPassword": {
+            "reference": {
+              "keyVault": {
+                "id": "[variables('keyVaultRef')]"
               },
-            "domainPassword":
-            {
-                "reference": {
-                    "keyVault": {
-                      "id": "[variables('keyVaultRef')]"
-                    },
-                    "secretName": "[parameters('keyVaultSecretName')]"
-                  }
-            },
-            "ouPath":
-            {
-              "value": "[parameters('ouPath')]"
-            },            
-            "storageSku":
-            {
-              "value": "[parameters('storageSku')]"
-            },
-            "numberOfServersToDeploy": {
-                "value": "[parameters('numberOfServersToDeploy')]"
-            },
-            "vmStartInstancePrefix": {
-                "value": "[parameters('vmStartInstancePrefix')]"
-            },
-            "subnetName": {
-                "value": "[parameters('subnetName')]"
-            },
-            "existingVNETName":{
-                "value": "[parameters('existingVNETName')]"
-            },
-            "existingVNETResourceGroupName": {
-                "value": "[parameters('existingVNETResourceGroupName')]"
-            },
-            "windowsOSVersion": {
-                "value": "[parameters('windowsOSVersion')]"
-            }     
+              "secretName": "[parameters('keyVaultSecretName')]"
+            }
+          },
+          "ouPath": {
+            "value": "[parameters('ouPath')]"
+          },
+          "storageSku": {
+            "value": "[parameters('storageSku')]"
+          },
+          "numberOfServersToDeploy": {
+            "value": "[parameters('numberOfServersToDeploy')]"
+          },
+          "vmStartInstancePrefix": {
+            "value": "[parameters('vmStartInstancePrefix')]"
+          },
+          "subnetName": {
+            "value": "[parameters('subnetName')]"
+          },
+          "existingVNETName": {
+            "value": "[parameters('existingVNETName')]"
+          },
+          "existingVNETResourceGroupName": {
+            "value": "[parameters('existingVNETResourceGroupName')]"
+          },
+          "windowsOSVersion": {
+            "value": "[parameters('windowsOSVersion')]"
+          },
+          "availabilitySetName": {
+            "value": "[parameters('availabilitySetName')]"
           }
         }
       }
-    ],
-    "outputs":
-    {
-  
     }
-  }
+  ],
+  "outputs": {}
+}
